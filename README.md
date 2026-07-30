@@ -1,5 +1,11 @@
 # ⚽ Premier Zone
 
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
 A full-stack Premier League web application built with **Spring Boot**, **React**, **Vite**, and **PostgreSQL**.
 
 Premier Zone allows users to browse Premier League players and clubs, filter and search player statistics, compare players, and build fantasy squads through a modern web interface.
