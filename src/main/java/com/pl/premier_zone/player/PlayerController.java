@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 @RestController
 @RequestMapping(path = "api/v1/player")
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class PlayerController {
 
     private final PlayerService playerService;

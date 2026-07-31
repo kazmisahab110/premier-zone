@@ -1174,3 +1174,145 @@
         padding: 28px 22px;
     }
 }
+
+.auth-page {
+    min-height: calc(100vh - 70px);
+    display: grid;
+    place-items: center;
+    width: min(520px, 92%);
+    margin: 0 auto;
+    padding: 50px 0;
+}
+
+.auth-card {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 34px;
+    background:
+            radial-gradient(
+                    circle at top right,
+                    rgba(132, 255, 120, 0.1),
+                    transparent 35%
+            ),
+            linear-gradient(145deg, #122334, #0d1926);
+    border: 1px solid #294158;
+    border-radius: 24px;
+}
+
+.auth-card h1 {
+    margin: 10px 0;
+    font-size: 2.5rem;
+}
+
+.auth-introduction {
+    margin-bottom: 26px;
+    color: #9fb0c0;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.auth-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #c5d1dc;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.auth-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    color: #edf3f8;
+    background: #091522;
+    border: 1px solid #294158;
+    border-radius: 12px;
+    font: inherit;
+    outline: none;
+}
+
+.auth-form input:focus {
+    border-color: #84ff78;
+}
+
+.auth-form button {
+    margin-top: 4px;
+    padding: 13px 18px;
+    color: #08111f;
+    background: #84ff78;
+    border: none;
+    border-radius: 12px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.auth-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-error {
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    color: #ffb4b4;
+    background: #3a1a1a;
+    border: 1px solid #ff5b5b;
+    border-radius: 12px;
+}
+
+.auth-switch {
+    margin: 24px 0 0;
+    color: #9fb0c0;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: #84ff78;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.account-card {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.account-card div {
+    padding: 22px;
+    background: #091522;
+    border: 1px solid #294158;
+    border-radius: 14px;
+}
+
+.account-card span,
+.account-card strong {
+    display: block;
+}
+
+.account-card span {
+    margin-bottom: 8px;
+    color: #8194a5;
+    font-size: 0.8rem;
+}
+
+.navbar-logout {
+    padding: 0;
+    color: #9fb0c0;
+    background: transparent;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+.navbar-logout:hover {
+    color: #84ff78;
+}

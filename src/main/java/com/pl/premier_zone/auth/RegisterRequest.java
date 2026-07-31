@@ -2,25 +2,25 @@ package com.pl.premier_zone.auth;
 
 public class RegisterRequest {
 
-    private String name;
+    private String displayName;
     private String email;
     private String password;
 
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String name, String email, String password) {
-        this.name = name;
+    public RegisterRequest(String displayName, String email, String password) {
+        this.displayName = displayName;
         this.email = email;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getEmail() {

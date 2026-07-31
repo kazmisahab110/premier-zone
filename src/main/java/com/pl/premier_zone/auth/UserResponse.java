@@ -3,16 +3,16 @@ package com.pl.premier_zone.auth;
 public class UserResponse {
 
     private Long id;
-    private String name;
+    private String displayName;
     private String email;
     private String role;
 
     public UserResponse() {
     }
 
-    public UserResponse(Long id, String name, String email, String role) {
+    public UserResponse(Long id, String displayName, String email, String role) {
         this.id = id;
-        this.name = name;
+        this.displayName = displayName;
         this.email = email;
         this.role = role;
     }
@@ -25,12 +25,12 @@ public class UserResponse {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.displayName = displayName;
     }
 
     public String getEmail() {

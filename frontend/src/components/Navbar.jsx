@@ -1,7 +1,16 @@
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
+import { useAuth } from "../auth/AuthContext";
 
 function Navbar({ fantasyCount }) {
+
+    const {
+        user,
+        isAuthenticated,
+        logout
+    } = useAuth();
+
+
     return (
         <header className="navbar">
             <NavLink to="/" className="brand">
@@ -21,6 +30,27 @@ function Navbar({ fantasyCount }) {
     </span>
                     )}
                 </NavLink>
+                {isAuthenticated ? (
+                    <>
+                        <NavLink to="/account">
+                            {user.displayName}
+                        </NavLink>
+
+                        <button
+                            type="button"
+                            className="navbar-logout"
+                            onClick={logout}
+                        >
+                            Log Out
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <NavLink to="/login">Log In</NavLink>
+                        <NavLink to="/register">Register</NavLink>
+                    </>
+                )}
+
             </nav>
         </header>
     );

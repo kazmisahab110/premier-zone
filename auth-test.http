@@ -1,0 +1,22 @@
+### Register
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "displayName": "Test User",
+  "email": "test@premierzone.com",
+  "password": "Password123!"
+}
+
+### Login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@premierzone.com",
+  "password": "Password123!"
+}
+
+### Current user
+GET http://localhost:8080/api/v1/auth/me
+Authorization: Bearer eyJraWQiOiJQX25yTEkwbzhuY2U1UU9iRVZ0NGJFSFY0X3ctbTFUWUJranFfUTEyUXgwIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJ0ZXN0QHByZW1pZXJ6b25lLmNvbSIsInJvbGUiOiJVU0VSIiwiZGlzcGxheU5hbWUiOiJUZXN0IFVzZXIiLCJpc3MiOiJwcmVtaWVyLXpvbmUiLCJleHAiOjE3ODU0MTk3NTEsImlhdCI6MTc4NTQxNjE1MSwidXNlcklkIjoxfQ.NrwJoXfkuCUnWB1x-OrpSo3EVNKaKcHjPj_gLuo8LOk
