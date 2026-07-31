@@ -19,6 +19,15 @@ import RegisterPage from "./pages/RegisterPage";
 import AccountPage from "./pages/AccountPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
+import { useAuth } from "./auth/AuthContext";
+import {
+    getSavedFantasySquad,
+    saveFantasySquad,
+    clearSavedFantasySquad
+} from "./api/fantasyApi";
+
+import { getAllPlayers } from "./api/playerApi";
+
 
 function getPrimaryPosition(player) {
     return player.pos?.split(",")[0].trim();
@@ -47,6 +56,10 @@ function App() {
     const [squadMessage, setSquadMessage] = useState("");
     const [messageType, setMessageType] = useState("");
 
+    const { isAuthenticated, authLoading } = useAuth();
+    const [squadSyncing, setSquadSyncing] = useState(false);
+    const [squadHydrated, setSquadHydrated] = useState(false);
+
     useEffect(() => {
         try {
             localStorage.setItem(
@@ -57,6 +70,98 @@ function App() {
             console.error("Could not save fantasy squad:", error);
         }
     }, [fantasyPlayers]);
+
+
+    useEffect(() => {
+        if (authLoading) {
+            return;
+        }
+
+        if (!isAuthenticated) {
+            setSquadHydrated(false);
+            return;
+        }
+
+        let cancelled = false;
+
+        async function loadSavedSquad() {
+            try {
+                setSquadSyncing(true);
+                setSquadHydrated(false);
+
+                const [
+                    savedSelections,
+                    allPlayers
+                ] = await Promise.all([
+                    getSavedFantasySquad(),
+                    getAllPlayers()
+                ]);
+
+                if (cancelled) {
+                    return;
+                }
+
+                const playersByName = new Map(
+                    allPlayers.map((player) => [
+                        player.name,
+                        player
+                    ])
+                );
+
+                const hydratedPlayers = savedSelections
+                    .map((selection) => {
+                        const fullPlayer = playersByName.get(
+                            selection.playerName
+                        );
+
+                        if (!fullPlayer) {
+                            console.warn(
+                                `Saved player was not found: ${selection.playerName}`
+                            );
+
+                            return null;
+                        }
+
+                        return {
+                            ...fullPlayer,
+                            selectedPosition:
+                            selection.assignedPosition
+                        };
+                    })
+                    .filter(Boolean);
+
+                setFantasyPlayers(hydratedPlayers);
+
+                console.log(
+                    "Hydrated fantasy squad:",
+                    hydratedPlayers
+                );
+            } catch (error) {
+                if (!cancelled) {
+                    console.error(
+                        "Could not load saved squad:",
+                        error
+                    );
+
+                    setMessageType("error");
+                    setSquadMessage(
+                        "Your saved fantasy squad could not be loaded."
+                    );
+                }
+            } finally {
+                if (!cancelled) {
+                    setSquadSyncing(false);
+                    setSquadHydrated(true);
+                }
+            }
+        }
+
+        loadSavedSquad();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [isAuthenticated, authLoading]);
 
     useEffect(() => {
 
@@ -70,7 +175,42 @@ function App() {
 
     }, [squadMessage]);
 
+    async function persistFantasyTeam(updatedPlayers) {
+        if (!isAuthenticated || !squadHydrated) {
+            return;
+        }
+
+        try {
+            setSquadSyncing(true);
+            await saveFantasySquad(updatedPlayers);
+        } catch (error) {
+            console.error(
+                "Unable to save fantasy squad:",
+                error
+            );
+
+            setMessageType("error");
+            setSquadMessage(
+                "Your squad changed locally, but it could not be saved."
+            );
+        } finally {
+            setSquadSyncing(false);
+        }
+    }
+
     function addFantasyPlayer(player, selectedPosition) {
+        if (
+            isAuthenticated &&
+            (!squadHydrated || squadSyncing)
+        ) {
+            setMessageType("error");
+            setSquadMessage(
+                "Please wait while your saved squad loads."
+            );
+            return;
+        }
+
+
         const alreadySelected = fantasyPlayers.some(
             (selectedPlayer) => selectedPlayer.name === player.name
         );
@@ -117,13 +257,16 @@ function App() {
             return;
         }
 
-        setFantasyPlayers((currentPlayers) => [
-            ...currentPlayers,
+        const updatedPlayers = [
+            ...fantasyPlayers,
             {
                 ...player,
                 selectedPosition: primaryPosition,
             },
-        ]);
+        ];
+
+        setFantasyPlayers(updatedPlayers);
+        persistFantasyTeam(updatedPlayers);
 
         setMessageType("success");
 
@@ -133,25 +276,47 @@ function App() {
     }
 
     function removeFantasyPlayer(playerName) {
-
-        setFantasyPlayers((currentPlayers) =>
-            currentPlayers.filter(
-                (player) => player.name !== playerName
-            )
+        const updatedPlayers = fantasyPlayers.filter(
+            (player) => player.name !== playerName
         );
 
-        setMessageType("success");
+        setFantasyPlayers(updatedPlayers);
+        persistFantasyTeam(updatedPlayers);
 
+        setMessageType("success");
         setSquadMessage(
             `${playerName} removed from your squad.`
         );
-
     }
 
-    function clearFantasySquad() {
+    async function clearFantasySquad() {
         setFantasyPlayers([]);
+
+        if (isAuthenticated) {
+            try {
+                setSquadSyncing(true);
+                await clearSavedFantasySquad();
+            } catch (error) {
+                console.error(
+                    "Unable to clear saved fantasy squad:",
+                    error
+                );
+
+                setMessageType("error");
+                setSquadMessage(
+                    "The local squad was cleared, but the saved squad could not be cleared."
+                );
+
+                return;
+            } finally {
+                setSquadSyncing(false);
+            }
+        }
+
         setMessageType("success");
-        setSquadMessage("Your fantasy squad has been cleared.");
+        setSquadMessage(
+            "Your fantasy squad has been cleared."
+        );
     }
 
     return (
