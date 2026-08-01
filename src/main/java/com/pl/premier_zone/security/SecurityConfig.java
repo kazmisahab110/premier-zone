@@ -14,19 +14,29 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
+import java.util.Arrays;
+import java.util.List;
 import java.util.List;
 
 @Configuration
 public class SecurityConfig {
 
-    private final String allowedOrigin;
+    private final AppUserDetailsService appUserDetailsService;
+    private final List<String> allowedOrigins;
+
 
     public SecurityConfig(
-            @Value("${app.cors.allowed-origin}")
-            String allowedOrigin
+            AppUserDetailsService appUserDetailsService,
+            @Value("${app.cors.allowed-origins}") String allowedOrigins
     ) {
-        this.allowedOrigin = allowedOrigin;
+        this.appUserDetailsService = appUserDetailsService;
+
+        this.allowedOrigins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isBlank())
+                .toList();
     }
 
     @Bean
@@ -97,9 +107,7 @@ public class SecurityConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of(allowedOrigin)
-        );
+        configuration.setAllowedOrigins(allowedOrigins);
 
         configuration.setAllowedMethods(
                 List.of(
