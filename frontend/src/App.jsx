@@ -78,7 +78,6 @@ function App() {
         }
 
         if (!isAuthenticated) {
-            setSquadHydrated(false);
             return;
         }
 

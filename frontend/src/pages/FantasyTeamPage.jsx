@@ -1,6 +1,4 @@
-function getPrimaryPosition(player) {
-    return player.pos?.split(",")[0].trim();
-}
+
 
 
 function FantasyTeamPage({

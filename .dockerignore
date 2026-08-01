@@ -1,0 +1,9 @@
+.git
+.github
+.idea
+frontend
+node_modules
+target
+*.log
+auth-test.http
+README.md
